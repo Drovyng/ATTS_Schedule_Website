@@ -1,0 +1,215 @@
+textarea{
+    resize: none;
+    font: 18px "Times New Roman";
+}
+body{
+    margin: 0;
+    grid-template-columns: 1fr 0fr 1fr;
+    font: 18px "Times New Roman";
+    background: lightgray;
+}
+
+#toolbar{
+    width: 550px;
+    background: white;
+    outline: 4px solid black;
+    height: 40px;
+    display: grid;
+    grid-template-columns: 1fr 6fr 1fr;
+}
+#toolbar > * {
+    font: 17px "Times New Roman";
+}
+
+#toolbar-info{
+    grid-column: 1;
+    border: 0;
+    border-right: 2px solid black;
+}
+#toolbar-main{
+    grid-column: 2;
+}
+#toolbar-dev{
+    grid-column: 3;
+    border: 0;
+    border-left: 2px solid black;
+}
+#loading-admin > *{
+    font-size: 24px;
+}
+
+#content{
+    justify-self: center;
+    width: 550px;
+    display: flex;
+}
+#pre-schedule{
+    margin: 40px 0 0 0;
+    position: absolute;
+    justify-self: center;
+    width: 550px;
+    background: white;
+    outline: 4px solid black;
+    height: 110px;
+}
+#schedule-container, #loading{
+    margin: 150px 0 0 0;
+    position: absolute;
+    justify-self: center;
+    width: 550px;
+    min-height: 100vh;
+    background: white;
+    outline: 4px solid black;
+}
+#loading{
+    touch-action: none;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#loading-center{
+    width: 60px;
+    height: 60px;
+    border: 5px solid black;
+    border-top: 5px solid transparent;
+
+    border-radius: 50%;
+    margin: 1.5em auto;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.schedule-day-outer{
+    margin: 20px 5%;
+    width: 90%;
+    outline: 2px solid black;
+    box-sizing: content-box;
+}
+.schedule-day-outer > div3 {
+    border-bottom: 1px solid black;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    height: 32px;
+    display: block;
+}
+div3 > p{
+    text-align: center;
+    align-content: center;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    height: 32px;
+}
+.schedule-day{
+    background: black;
+    display: grid;
+    grid-template-columns: 7fr 4fr 1fr;
+    grid-column-gap: 2px;
+    overflow: clip;
+}
+.schedule-day > div,
+.schedule-day > div2 {
+    background: white;
+    height: 50px;
+    overflow: hidden;
+}
+.schedule-day > .schedule-pair-blank,
+.schedule-day > .schedule-pair-blank {
+    background: lightgray;
+}
+.schedule-day > div{
+    margin: 1px 0;
+    padding: 0 2px;
+}
+.schedule-day > div,
+.schedule-day > div2 > textarea {
+    text-align: center;
+    align-content: center;
+    font-weight: 550;
+}
+.schedule-day > div2 > textarea {
+    width: calc(100% - 5.6px);
+    height: calc(100% - 5.6px);
+}
+.schedule-pair-blank{
+    background: lightgray;
+    /*height: 40px;*/
+}
+textarea{
+    border-color: black;
+}
+.schedule-pair-name{
+    grid-column: 1;
+}
+.schedule-pair-multy{
+    white-space: nowrap;
+}
+select{
+    width: 100%;
+    height: 100%;
+}
+select.schedule-pair-multy{
+    height: 50%;
+}
+.schedule-pair-teacher{
+    grid-column: 2;
+    font-style: italic;
+}
+.schedule-pair-cabinet{
+    grid-column: 3;
+}
+.schedule-day > *:not(.schedule-pair-cabinet){
+    text-align: start;
+}
+
+
+#pre-schedule{
+    padding: 4px 0 0 0;
+}
+.hor-scroll {
+    justify-self: center;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    width: 500px;
+    background: #ddd;
+    cursor: default;
+    touch-action: cross-slide-x;
+    border: 2px solid #ccc;
+    margin: 6px 0;
+    padding: 0 4px;
+    border-radius: 20px;
+}
+.hor-scroll::-webkit-scrollbar{
+    height: 0;
+    width: 0;
+    color: transparent;
+}
+.hor-scroll-wrapper {
+    display: inline-block;
+}
+.hor-scroll-wrapper > * {
+    display: inline-block;
+    margin: 4px 4px;
+    background-color: #eee;
+    border: 2px solid #00000022;
+    border-radius: 15px;
+    cursor: pointer;
+    width: 74px;
+    height: 28px;
+    font-size: 14px;
+}
+.hor-scroll-wrapper > *:not(.hs-selected):hover {
+    background: #FFEBCD;
+}
+.hor-scroll-wrapper > *.hs-selected {
+    background: #FFDEAD;
+}
+#scroll-teachers > * {
+    width: 120px;
+}

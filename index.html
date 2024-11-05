@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>АТТС Расписание</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="content">
+        <div id="toolbar">
+            <button id="toolbar-info" disabled>Инфо</button>
+            <button id="toolbar-main" disabled>Расписание</button>
+            <button id="toolbar-dev">Админ</button>
+        </div>
+        <div id="pre-schedule">
+            <div class="hor-scroll"><div class="hor-scroll-wrapper" id="scroll-groups"></div></div>
+            <div class="hor-scroll"><div class="hor-scroll-wrapper" id="scroll-teachers"></div></div>
+        </div>
+        <div id="schedule-container"></div>
+        <div id="loading">
+            <div>
+                <h1 id="loading-title">Загрузка...</h1>
+                <div id="loading-center"></div>
+            </div>
+            <div id="loading-admin" style="display: none">
+                <input id="loading-admin-input" type="password" placeholder="Введите код админа">
+                <button id="loading-admin-button">Войти</button>
+            </div>
+        </div>
+    </div>
+    <script src="src/database.js" type="module"></script>
+    <script src="src/content.js" type="module"></script>
+    <script src="src/renderer.js" type="module"></script>
+    <script src="src/elements-behavior.js" type="module"></script>
+    <script src="src/main.js" type="module"></script>
+</body>
+</html>
