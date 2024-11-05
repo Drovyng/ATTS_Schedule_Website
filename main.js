@@ -1,5 +1,5 @@
-import {addDay, ScheduleContainer, content} from "/renderer.js"
-import {database, selectedRole} from "/content.js";
+import {addDay, ScheduleContainer, content} from "renderer.js"
+import {database, selectedRole} from "content.js";
 
 const Content = document.getElementById("content")
 const Loading = document.getElementById("loading")
