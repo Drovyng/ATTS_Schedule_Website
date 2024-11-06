@@ -199,7 +199,6 @@ function toolTables(){
         add1 += `<div id="${id+"0"}"><button class="minus" id="${id+"1"}"></button><textarea class="edit-select" id="${id+"2"}">${content.ListTeachers[key]}</textarea></div>`
         k0 = key;
     }
-    add1 += `<button class="minus" id="a0">`
     let add2 = "";
     let k1 = "";
     for (let key in content.ListGroups) {
@@ -207,17 +206,16 @@ function toolTables(){
         add2 += `<div id="${id+"0"}"><button class="minus" id="${id+"1"}"></button><textarea class="edit-select" id="${id+"2"}">${content.ListTeachers[key]}</textarea></div>`
         k1 = key;
     }
-    add2 += `<button class="minus" id="a1">`
     ScheduleContainer.innerHTML = `<button class='send-data' id="b0">Применить</button>
 <button class='send-data' style="grid-column: 2" id="b1">Применить</button>
 <div class="schedule-list" id="l0">
    ${add1}
+    <button class='send-data' id="a0">Добавить</button>
 </div>
 <div class="schedule-list" id="l1">
    ${add2}
-</div>
-<button class='send-data' id="a0">Добавить</button>
-<button class='send-data' style="grid-column: 2" id="a1">Добавить</button>`;
+    <button class='send-data' style="grid-column: 2" id="a1">Добавить</button>
+</div>`;
     document.getElementById("b0").onclick = () => sendData(true);
     document.getElementById("b1").onclick = () => sendData(false);
     document.getElementById("a0").onclick = () => {
