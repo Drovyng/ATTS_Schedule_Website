@@ -50,7 +50,7 @@ div3 > .plus{
 #schedule-container, #loading {
     margin: 190px 0 0 0;
 }
-#send-data{
+#send-data, .send-data{
     text-align: center;
     width: 70%;
     margin: 16px 15% 0 15%;
@@ -78,4 +78,25 @@ div3 > .plus{
 @keyframes failed {
     0% { background: lightcoral; }
     100% { background: lightskyblue; }
+}
+.schedule-list{
+    background: black;
+    display: grid;
+}
+/*.schedule-list > *,*/
+.schedule-list > div > textarea {
+    text-align: center;
+    align-content: center;
+    font-weight: 550;
+    padding: 0 2px;
+    background: white;
+    height: 50px;
+}
+.schedule-list > div {
+    margin: 1px 0;
+    background: white;
+    overflow: hidden;
+}
+.schedule-list > div > .minus{
+    transform: translate(-23px, 8px);
 }

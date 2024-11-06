@@ -1,7 +1,7 @@
 import * as database from "/ATTS_Schedule_Website/src/database.js"
 
-let ListGroups = []
-let ListTeachers = []
+let ListGroups = {}
+let ListTeachers = {}
 let WeekCur = {}
 let WeekNext = {}
 
@@ -22,7 +22,7 @@ function getCookie(name) {
 }
 function saveCookie(){
     if (selectedRole >= 0) {
-        document.cookie = "role=" + (selectedRoleType ? ListTeachers[selectedRole] : ListGroups[selectedRole]) +
+        document.cookie = "role=" + (selectedRoleType ? selectedRole : selectedRole) +
             ";max-age=7776000"
         document.cookie = "role-type=" + selectedRoleType +
             ";max-age=7776000"
@@ -32,7 +32,7 @@ function loadCookie(){
     if (document.cookie.length < 17) return;
     selectedRoleType = getCookie("role-type") === "true";
     let role = getCookie("role")
-    selectedRole = selectedRoleType ? ListTeachers.indexOf(role) : ListGroups.indexOf(role);
+    selectedRole = parseInt(role);
 }
 function loadGroupCur(name, onLoad){
     database.getData("week_cur/" + name, (data) => {
@@ -47,18 +47,24 @@ function loadGroupsCur(onLoad){
     }, onLoad);
 }
 function loadListGroups(onLoad){
-    ListGroups = []
+    ListGroups = {}
     database.getData("groups", (data) => {
         ListGroups = data;
         if (onLoad !== null) onLoad();
     }, onLoad);
+    if (ListGroups instanceof Array){
+        ListGroups = Object.assign({}, ListGroups);
+    }
 }
 function loadListTeachers(onLoad){
-    ListTeachers = []
+    ListTeachers = {}
     database.getData("teachers", (data) => {
         ListTeachers = data;
         if (onLoad !== null) onLoad();
     }, onLoad);
+    if (ListTeachers instanceof Array){
+        ListTeachers = Object.assign({}, ListTeachers);
+    }
 }
 
 export {
