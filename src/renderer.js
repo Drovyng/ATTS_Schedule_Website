@@ -1,4 +1,4 @@
-import * as content from "/src/content.js"
+import * as content from "src/content.js"
 const ScheduleContainer = document.getElementById("schedule-container")
 
 const pairClass = "schedule-pair-";

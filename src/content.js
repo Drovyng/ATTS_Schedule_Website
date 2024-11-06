@@ -1,4 +1,4 @@
-import * as database from "/src/database.js"
+import * as database from "src/database.js"
 
 let ListGroups = []
 let ListTeachers = []

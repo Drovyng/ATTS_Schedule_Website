@@ -8,7 +8,7 @@ import {
     setSelectRole,
     reload2With,
     getDays
-} from "/src/main.js";
+} from "src/main.js";
 
 const ListTools = ["Просмотр", "Редактор"];
 

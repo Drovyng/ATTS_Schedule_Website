@@ -1,4 +1,4 @@
-import {addDay, ScheduleContainer, content} from "/src/renderer.js"
+import {addDay, ScheduleContainer, content} from "src/renderer.js"
 
 const Content = document.getElementById("content")
 const Loading = document.getElementById("loading")
