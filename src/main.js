@@ -24,12 +24,12 @@ function adminResult(success){
         return;
     }
     var admincss = document.createElement("link");
-    admincss.href = "/styles_admin.css";
+    admincss.href = "/ATTS_Schedule_Website/styles_admin.css";
     admincss.rel = "stylesheet";
     document.head.appendChild(admincss);
     var adminscript = document.createElement("script");
     adminscript.type = "module";
-    adminscript.src = "/src/admin.js";
+    adminscript.src = "/ATTS_Schedule_Website/src/admin.js";
     document.body.appendChild(adminscript);
 }
 function adminTry(){
