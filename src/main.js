@@ -182,7 +182,9 @@ function reloadScrolls(){
     const scrollGroups = document.getElementById("scroll-groups");
     scrollGroups.innerHTML = "";
     for (let i = 0; i < content.ListGroups.length; i++) {
-        scrollGroups.innerHTML += "<button class='hsb-group' id='group-"+i+"'>"+content.ListGroups[i]+"</button>";
+        let grpname = content.ListGroups[i];
+        if (/^[0-9-]*$/.test(grpname)){ grpname = grpname.substring(3); }
+        scrollGroups.innerHTML += "<button class='hsb-group' id='group-"+i+"'>"+grpname+"</button>";
     }
     {
         let wat1 = document.getElementsByClassName("hsb-group");
