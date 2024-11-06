@@ -4,7 +4,6 @@ textarea{
 }
 body{
     margin: 0;
-    grid-template-columns: 1fr 0fr 1fr;
     font: 18px "Times New Roman";
     background: lightgray;
 }
@@ -196,11 +195,12 @@ select.schedule-pair-multy{
 .hor-scroll-wrapper > * {
     display: inline-block;
     margin: 4px 4px;
+    padding: 0 6px;
     background-color: #eee;
     border: 2px solid #00000022;
     border-radius: 15px;
     cursor: pointer;
-    width: 74px;
+    width: auto;
     height: 28px;
     font-size: 14px;
 }
