@@ -8,7 +8,7 @@ import {
     setSelectRole,
     reload2With,
     getDays
-} from "ATTS_Schedule_Website/src/main.js";
+} from "/ATTS_Schedule_Website/src/main.js";
 
 const ListTools = ["Просмотр", "Редактор"];
 
