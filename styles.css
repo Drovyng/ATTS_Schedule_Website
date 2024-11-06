@@ -6,6 +6,7 @@ body{
     margin: 0;
     font: 18px "Times New Roman";
     background: lightgray;
+    display: grid;
 }
 
 #toolbar{
