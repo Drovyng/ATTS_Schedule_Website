@@ -203,6 +203,7 @@ select.schedule-pair-multy{
     cursor: pointer;
     width: auto;
     height: 28px;
+    min-width: 40px;
     font-size: 14px;
 }
 .hor-scroll-wrapper > *:not(.hs-selected):hover {
