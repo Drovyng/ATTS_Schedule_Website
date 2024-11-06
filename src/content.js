@@ -1,4 +1,4 @@
-import * as database from "ATTS_Schedule_Website/src/database.js"
+import * as database from "/ATTS_Schedule_Website/src/database.js"
 
 let ListGroups = []
 let ListTeachers = []
