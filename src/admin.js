@@ -10,7 +10,9 @@ import {
     getDays
 } from "/ATTS_Schedule_Website/src/main.js";
 
-const ListTools = ["Просмотр", "Редактор", "Управление Списками"];
+import * as excel_parser from "/ATTS_Schedule_Website/src/excel_parser.js"
+
+const ListTools = ["Просмотр", "Редактор", "Управление Списками", "Парсер Excel"];
 
 let selectedGroup = content.selectedRoleType ? 0 : content.selectedRole;
 let selectedTool = 0;
@@ -21,6 +23,7 @@ function selectGroup(_, id){
     if (toRemove.length > 0) toRemove[0].classList.remove("hs-selected");
     document.getElementById("group-"+id).classList.add("hs-selected");
     selectedGroup = id;
+    if (groupsDays !== null) return;
     Loading.style.opacity = "100%";
     selectTool(selectedTool);
 }
@@ -32,6 +35,8 @@ function selectTool(id){
     selectedTool = id;
 
     ScheduleContainer.style = null;
+    groupsDays = null;
+    groupsDaysSelected = 0;
 
     switch (selectedTool) {
         case 0:
@@ -55,9 +60,43 @@ function selectTool(id){
             content.loadListGroups(waiting);
             content.loadListTeachers(waiting);
             return;
+        case 3:
+            ScheduleContainer.innerHTML = `<button class='send-data' id="drop-field">Перетяните файл сюда</button>`
+            document.getElementById("drop-field").ondrop = (event) => {
+                console.log("File(s) dropped");
+                event.preventDefault();
+                if (event.dataTransfer.items) {
+                    // Use DataTransferItemList interface to access the file(s)
+                    [...event.dataTransfer.items].forEach((item, i) => {
+                        // If dropped items aren't files, reject them
+                        if (item.kind === "file") {
+                            const file = item.getAsFile();
+                            console.log(`… file[${i}].name = ${file.name}`);
+                            excel_parser.parse(file, content.ListTeachers, (parsed)=>{
+                                groupsDays = parsed;
+                                toolExcel();
+                            });
+                        }
+                    });
+                } else {
+                    // Use DataTransfer interface to access the file(s)
+                    [...event.dataTransfer.files].forEach((file, i) => {
+                        console.log(`… file[${i}].name = ${file.name}`);
+                        excel_parser.parse(file, content.ListTeachers, (parsed)=>{
+                            groupsDays = parsed;
+                            toolExcel();
+                        });
+                    });
+                }
+            };
+            document.getElementById("drop-field").ondragover = (event) => {
+                event.preventDefault();
+            };
+            return;
     }
 }
-
+let groupsDays = null;
+let groupsDaysSelected = 0;
 
 function toolEditor(){
     function sendData(){
@@ -131,7 +170,7 @@ function toolEditor(){
         days[info.d].splice(info.p, 1);
         toolEditor();
     }
-    redraw(false, selectedGroup, true, days);
+    redraw(false, selectedGroup, true, JSON.parse(JSON.stringify(days)));
     let plus = document.getElementsByClassName("plus");
     for (let i = 0; i < plus.length; i++) {
         plus[i].onclick = btnPlus;
@@ -157,6 +196,9 @@ function toolEditor(){
         select[i].onchange = editSelect;
     }
     document.getElementById("send-data").onclick = sendData;
+    if (groupsDays !== null){
+        toolExcel(true);
+    }
 }
 
 function toolTables(){
@@ -203,7 +245,7 @@ function toolTables(){
     let k1 = "";
     for (let key in content.ListGroups) {
         let id = "l1|"+key+"|";
-        add2 += `<div id="${id+"0"}"><button class="minus" id="${id+"1"}"></button><textarea class="edit-select" id="${id+"2"}">${content.ListTeachers[key]}</textarea></div>`
+        add2 += `<div id="${id+"0"}"><button class="minus" id="${id+"1"}"></button><textarea class="edit-select" id="${id+"2"}">${content.ListGroups[key]}</textarea></div>`
         k1 = key;
     }
     ScheduleContainer.innerHTML = `<button class='send-data' id="b0">Применить</button>
@@ -223,7 +265,7 @@ function toolTables(){
         toolTables();
     };
     document.getElementById("a1").onclick = () => {
-        content.ListTeachers[`${parseInt(k1)+1}`] = "-новая группа-";
+        content.ListGroups[`${parseInt(k1)+1}`] = "-новая группа-";
         toolTables();
     };
     let minus = document.getElementsByClassName("minus");
@@ -234,6 +276,31 @@ function toolTables(){
     for (let i = 0; i < select.length; i++) {
         select[i].onchange = editSelect;
     }
+}
+
+function toolExcel(post = false){
+    days = groupsDays[groupsDaysSelected].data;
+    if (post){
+        ScheduleContainer.insertAdjacentHTML("afterbegin", `
+<p>Для заливки нужно выбрать сверху нужную группу (не переключать инструменты)</p>
+<h1>${groupsDays[groupsDaysSelected].name}</h1>
+<div style="display: flex; justify-content: center; margin: 16px 0">
+<button class='send-data' id="mv-back" style="display: inline-block; margin: 0 2% 0 10%; width: 20%">&lt;</button>
+<button class='send-data' id="mv-next" style="display: inline-block; margin: 0 10% 0 2%; width: 20%">&gt;</button>
+</div>`);
+        document.getElementById("mv-back").disabled = groupsDaysSelected === 0 ? true : null;
+        document.getElementById("mv-next").disabled = groupsDaysSelected === groupsDays.length-1 ? true : null;
+        document.getElementById("mv-back").onclick = () =>{
+            groupsDaysSelected--;
+            toolExcel();
+        };
+        document.getElementById("mv-next").onclick = () =>{
+            groupsDaysSelected++;
+            toolExcel();
+        };
+        return;
+    }
+    toolEditor();
 }
 
 document.title = "[АДМИН] " + document.title;
