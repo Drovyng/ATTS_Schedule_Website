@@ -23,14 +23,46 @@ function adminResult(success){
         document.getElementById("loading-title").innerText = "Ошибка!";
         return;
     }
-    var admincss = document.createElement("link");
-    admincss.href = "/ATTS_Schedule_Website/styles_admin.css";
-    admincss.rel = "stylesheet";
-    document.head.appendChild(admincss);
-    var adminscript = document.createElement("script");
-    adminscript.type = "module";
-    adminscript.src = "/ATTS_Schedule_Website/src/admin.js";
-    document.body.appendChild(adminscript);
+    let lol = 0;
+    function start(l = 1) {
+        lol += l;
+        if (lol < 2) return;
+        content.setIsCurWeek(()=>{
+            var excelscript = document.createElement("script");
+            console.log(content.WeekCur)
+            excelscript.onload = () => {
+                var admincss = document.createElement("link");
+                admincss.href = "/ATTS_Schedule_Website/styles_admin.css";
+                admincss.rel = "stylesheet";
+                document.head.appendChild(admincss);
+                var adminscript = document.createElement("script");
+                adminscript.type = "module";
+                adminscript.src = "/ATTS_Schedule_Website/src/admin.js";
+                document.body.appendChild(adminscript);
+            }
+            excelscript.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+            document.body.appendChild(excelscript);
+        });
+    }
+    function st(){ start(2)}
+    content.database.getData("week_cur/date", (data1) => {
+        let week = Math.floor((Date.now()-Date.parse('1/1/2024')) / content.weekDivide);
+        if ((week + "") !== (data1 + "")){
+            console.log(week + " !== " + data1)
+            function replace(data){
+                data["date"] = week;
+                console.log(data)
+                content.database.setData("week_cur", data, start, start);
+                let empty = {};
+                for (var emptyKey in content.ListGroups) {
+                    empty[emptyKey] = {d0:{c:0},d1:{c:0},d2:{c:0},d3:{c:0},d4:{c:0},d5:{c:0}};
+                }
+                content.database.setData("week_next", empty, start, start);
+            }
+            content.database.getData("week_next", (data) => { replace(data) }, ()=>{replace({})});
+        }
+        else st();
+    }, st);
 }
 function adminTry(){
     document.getElementById("toolbar-dev").onclick = null;
@@ -41,14 +73,13 @@ document.getElementById("loading-admin-button").onclick = adminTry;
 
 function getDays(roleType = null, role = null, isDev = false){
     let days = [[], [], [], [], [], []];
-
     if (roleType){
-        let week = (content.isCurWeek ? content.WeekCur : content.WeekNext);
+        let week = content.WeekCur;
         for (let weekCurKey in week) {
             if (weekCurKey === "date") {
                 continue;
             }
-            let pairWeek = week[weekCurKey];
+            let pairWeek = week[weekCurKey] ? week[weekCurKey] : {d0:{c:0},d1:{c:0},d2:{c:0},d3:{c:0},d4:{c:0},d5:{c:0}};
             for (let i = 0; i < 6; i++) {
                 let day = pairWeek["d" + i];
                 let count = day.c;
@@ -74,7 +105,7 @@ function getDays(roleType = null, role = null, isDev = false){
         }
     }
     else {
-        let week = (content.isCurWeek ? content.WeekCur : content.WeekNext)[content.ListGroups[role]];
+        let week = content.WeekCur[content.ListGroups[role]] ? content.WeekCur[content.ListGroups[role]] : {d0:{c:0},d1:{c:0},d2:{c:0},d3:{c:0},d4:{c:0},d5:{c:0}};
         for (let i = 0; i < 6; i++) {
             let day = week["d" + i];
             let count = day.c;
@@ -111,7 +142,7 @@ function redraw(roleType = null, role = null, isDev = false, days = null){
         days = getDays(roleType, role, isDev);
     }
     if (isDev){
-        ScheduleContainer.innerHTML = "<button id='send-data'>Применить</button>";
+        ScheduleContainer.innerHTML = "<button id='send-data'>Применить<input id='send-check' style='display: inline-block; width: 23px; height: 23px; margin-left: 12px; transform: translateY(2px);' type='checkbox'><p style='display: inline;font-size: 15px'>След.</p></button>";
     }
     for (let i = 0; i < 6; i++) {
         addDay(
@@ -154,10 +185,10 @@ function reload2With(roleType, role, isDev = false, need_redraw = true, onLol = 
     }
     if (role >= 0){
         if (roleType){
-            content.isCurWeek ? content.loadGroupsCur(complete) : complete();
+            content.loadGroups(complete);
         }
         else{
-            content.isCurWeek ? content.loadGroupCur(content.ListGroups[role], complete) : complete();
+            content.loadGroup(content.ListGroups[role], complete);
         }
     }
     else {
@@ -170,9 +201,11 @@ let selectRole = (roleType, role) =>{
     let toRemove = document.getElementsByClassName("hs-selected");
     if (toRemove.length > 0) toRemove[0].classList.remove("hs-selected");
     if (roleType){
+        document.getElementById("warning-text").innerHTML = "Пары видно <b>только</b> при <b>явном упоминании</b> вас в расписании!"
         document.getElementById("teacher-"+role).classList.add("hs-selected");
     }
     else {
+        document.getElementById("warning-text").innerHTML = "";
         document.getElementById("group-"+role).classList.add("hs-selected");
     }
     content.selectRole(roleType, role);
@@ -217,9 +250,9 @@ function reloadScrolls(){
 function setSelectRole(val){
     selectRole = val;
 }
-
-reload(true);
-
+content.setIsCurWeek(()=>{
+    reload(true);
+})
 export {
     content,
     addDay,

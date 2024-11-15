@@ -1,10 +1,8 @@
 import {
     content,
-    addDay,
     ScheduleContainer,
     redraw,
     Loading,
-    Content,
     setSelectRole,
     reload2With,
     getDays
@@ -34,13 +32,14 @@ function selectTool(id){
     document.getElementById("tool-"+id).classList.add("hs-selected");
     selectedTool = id;
 
+
     ScheduleContainer.style = null;
     groupsDays = null;
     groupsDaysSelected = 0;
 
     switch (selectedTool) {
         case 0:
-            reload2With(false, selectedGroup, false);
+            reload2With(false, selectedGroup, false, true);
             return;
         case 1:
             reload2With(false, selectedGroup, true, false, () =>{
@@ -97,11 +96,14 @@ function selectTool(id){
 }
 let groupsDays = null;
 let groupsDaysSelected = 0;
-
+let isNextWeek = false;
 function toolEditor(){
-    function sendData(){
+    function sendData(event){
+        if (event.target.id === "send-check"){
+            isNextWeek = event.target.value;
+            return;
+        }
         Loading.style.opacity = "100%";
-
         let data = {};
 
         for (let i = 0; i < 6; i++) {
@@ -116,7 +118,7 @@ function toolEditor(){
             }
             data["d" + i] = day;
         }
-        content.database.setData("week_cur/" + content.ListGroups[selectedGroup], data, () => {
+        content.database.setData(`${isNextWeek ? "week_next" : "week_cur"}/` + content.ListGroups[selectedGroup], data, () => {
             Loading.style.opacity = "0";
             document.getElementById("send-data").style.animation = "success 5s linear";
         }, () => {
@@ -196,6 +198,7 @@ function toolEditor(){
         select[i].onchange = editSelect;
     }
     document.getElementById("send-data").onclick = sendData;
+    document.getElementById("send-check").value = isNextWeek;
     if (groupsDays !== null){
         toolExcel(true);
     }
@@ -283,7 +286,7 @@ function toolExcel(post = false){
     if (post){
         ScheduleContainer.insertAdjacentHTML("afterbegin", `
 <p>Для заливки нужно выбрать сверху нужную группу (не переключать инструменты)</p>
-<h1>${groupsDays[groupsDaysSelected].name}</h1>
+<h1 style="text-align: center">${groupsDays[groupsDaysSelected].name}</h1>
 <div style="display: flex; justify-content: center; margin: 16px 0">
 <button class='send-data' id="mv-back" style="display: inline-block; margin: 0 2% 0 10%; width: 20%">&lt;</button>
 <button class='send-data' id="mv-next" style="display: inline-block; margin: 0 10% 0 2%; width: 20%">&gt;</button>
@@ -311,8 +314,7 @@ Scroller.innerHTML = "";
 
 for (let i = 0; i < ListTools.length; i++) {
     Scroller.innerHTML += "<button class='hsb-tool' id='tool-"+i+"'>"+ListTools[i]+"</button>";
-}
-{
+} {
     let wat2 = document.getElementsByClassName("hsb-tool");
     for (let i = 0; i < wat2.length; i++) {
         let l2 = i;
@@ -321,8 +323,7 @@ for (let i = 0; i < ListTools.length; i++) {
         });
     }
 }
-Scroller.parentElement.insertAdjacentHTML("afterend", "<p style='text-align: center'>При переходе между инструментами/группами данные не сохраняются!!!</p>")
-
-
-
-selectGroup(null, selectedGroup);
+document.getElementById("warning-text").innerHTML = "При переходе между инструментами/группами данные <b>не</b> сохраняются!!!"
+content.loadGroupsNext(()=>{
+    selectGroup(null, selectedGroup);
+});

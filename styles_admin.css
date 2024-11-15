@@ -25,10 +25,10 @@ div3 > .plus{
     font-weight: bold;
 }
 .word-top{
-    transform: translate(7px, 8px);
+    transform: translate(calc(495px + 7px), 8px);
 }
 .word-bottom{
-    transform: translate(7px, 28px);
+    transform: translate(calc(495px + 7px), 28px);
 }
 .plus, .minus, .word-top, .word-bottom{
     border: 0;
@@ -43,9 +43,6 @@ div3 > .plus{
 }
 #pre-schedule {
     height: 150px;
-}
-#pre-schedule > p {
-    margin: 4px 0;
 }
 #schedule-container, #loading {
     margin: 190px 0 0 0;
@@ -65,11 +62,14 @@ div3 > .plus{
     letter-spacing: 3px;
     padding: 0;
 }
-#send-data:hover{
+#send-data:hover, .send-data:disabled{
     filter: contrast(150%) brightness(115%);
 }
-#send-data:active{
+#send-data:active, .send-data:disabled{
     filter: contrast(150%) brightness(95%);
+}
+#send-data:disabled, .send-data:disabled{
+    filter: grayscale(100%);
 }
 @keyframes success {
     0% { background: lightgreen; }
@@ -80,8 +80,8 @@ div3 > .plus{
     100% { background: lightskyblue; }
 }
 .schedule-list{
-    background: black;
-    display: grid;
+    background: white;
+    grid-template-columns: 1fr;
 }
 /*.schedule-list > *,*/
 .schedule-list > div > textarea {
@@ -89,14 +89,18 @@ div3 > .plus{
     align-content: center;
     font-weight: 550;
     padding: 0 2px;
-    background: white;
     height: 50px;
 }
+.schedule-list > *{
+    grid-row: 1;
+}
 .schedule-list > div {
-    margin: 1px 0;
-    background: white;
-    overflow: hidden;
+    margin: 1px 14%;
 }
 .schedule-list > div > .minus{
     transform: translate(-23px, 8px);
+}
+#schedule-container{
+    grid-template-rows: 80px 1fr;
+    background: white;
 }

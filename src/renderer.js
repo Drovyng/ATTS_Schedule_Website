@@ -72,7 +72,7 @@ function addDay(title, pair_list, isDev = false, index = -1) {
                     teacherElementOut.appendChild(teacherElement2);
                 }
                 else {
-                    teacherElement.innerText = "1. " + pair_list[i].teacher[0] + "\n2. " + pair_list[i].teacher[1];
+                    teacherElement.innerText = "1. " + (pair_list[i].teacher[0] ? pair_list[i].teacher[0] : "") + "\n2. " + (pair_list[i].teacher[1] ? pair_list[i].teacher[1] : "");
                 }
                 teacherElement.classList.add(pairClass + "multy");
                 pairElement.classList.add(pairClass + "multy");
@@ -81,7 +81,7 @@ function addDay(title, pair_list, isDev = false, index = -1) {
                 if (isDev) {
                     teacherElement.value = pair_list[i].teacher;
                 }
-                else teacherElement.innerHTML = pair_list[i].teacher;
+                else teacherElement.innerHTML = pair_list[i].teacher ? pair_list[i].teacher : "";
             }
         }
         else {
@@ -97,9 +97,9 @@ function addDay(title, pair_list, isDev = false, index = -1) {
         if (isDev){
             pairElementOut.appendChild(pairElement);
             cabinetElementOut.appendChild(cabinetElement);
-            cabinetElementOut.innerHTML += `<button class='word-top' id='${id+(enabled ? "off" : "on")}' title="${enabled ? "Выключить" : "Включить"}">${enabled ? "D" : "E"}</button>`;
+            pairElementOut.insertAdjacentHTML("afterbegin", `<button class='word-top' id='${id+(enabled ? "off" : "on")}' title="${enabled ? "Выключить" : "Включить"}">${enabled ? "D" : "E"}</button>`);
             if (enabled) {
-                cabinetElementOut.innerHTML += `<button class='word-bottom' id='${id+(multy ? "single" : "multy")}' title="${multy ? "Сделать Одинарным" : "Сделать Двойным"}">${multy ? "S" : "M"}</button>`;
+                pairElementOut.insertAdjacentHTML("afterbegin", `<button class='word-bottom' id='${id+(multy ? "single" : "multy")}' title="${multy ? "Сделать Одинарным" : "Сделать Двойным"}">${multy ? "S" : "M"}</button>`);
             }
         }
         dayDiv.appendChild(isDev ? pairElementOut : pairElement);

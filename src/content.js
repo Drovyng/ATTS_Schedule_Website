@@ -5,9 +5,18 @@ let ListTeachers = {}
 let WeekCur = {}
 let WeekNext = {}
 
+const weekDivide = 1000 * 60 * 60 * 24 * 7;
+let WeekNubmer = Math.floor((Date.now()-Date.parse('1/1/2024')) / weekDivide);
+
 let selectedRoleType = false
 let selectedRole = -1
 let isCurWeek = true;
+function setIsCurWeek(next){
+    database.getData("week_cur/date", (data) => {
+        isCurWeek = (WeekNubmer + "") === (data + "");
+        next();
+    }, next);
+}
 
 function selectRole(roleType, role){
     selectedRoleType = roleType;
@@ -34,15 +43,21 @@ function loadCookie(){
     let role = getCookie("role")
     selectedRole = parseInt(role);
 }
-function loadGroupCur(name, onLoad){
-    database.getData("week_cur/" + name, (data) => {
+function loadGroup(name, onLoad){
+    database.getData(`week_${isCurWeek ? "cur" : "next"}/${name}`, (data) => {
         WeekCur[name] = data;
         if (onLoad !== null) onLoad();
     }, onLoad);
 }
-function loadGroupsCur(onLoad){
-    database.getData("week_cur", (data) => {
+function loadGroups(onLoad){
+    database.getData(`week_${isCurWeek ? "cur" : "next"}`, (data) => {
         WeekCur = data;
+        if (onLoad !== null) onLoad();
+    }, onLoad);
+}
+function loadGroupsNext(onLoad){
+    database.getData("week_next", (data) => {
+        WeekNext = data;
         if (onLoad !== null) onLoad();
     }, onLoad);
 }
@@ -77,15 +92,18 @@ export {
     selectedRoleType,
     selectedRole,
     isCurWeek,
+    setIsCurWeek,
     selectRole,
 
     loadCookie,
 
-    loadGroupCur,
-    loadGroupsCur,
+    loadGroup,
+    loadGroups,
+    loadGroupsNext,
 
     WeekCur,
     WeekNext,
 
-    database
+    database,
+    weekDivide
 }
