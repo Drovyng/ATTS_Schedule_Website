@@ -31,14 +31,21 @@ function adminResult(success){
             var excelscript = document.createElement("script");
             console.log(content.WeekCur)
             excelscript.onload = () => {
-                var admincss = document.createElement("link");
-                admincss.href = "/ATTS_Schedule_Website/styles_admin.css";
-                admincss.rel = "stylesheet";
-                document.head.appendChild(admincss);
-                var adminscript = document.createElement("script");
-                adminscript.type = "module";
-                adminscript.src = "/ATTS_Schedule_Website/src/admin.js";
-                document.body.appendChild(adminscript);
+                var parsescript = document.createElement("script");
+                console.log(content.WeekCur)
+                parsescript.onload = () => {
+                    var admincss = document.createElement("link");
+                    admincss.href = "/ATTS_Schedule_Website/styles_admin.css";
+                    admincss.rel = "stylesheet";
+                    document.head.appendChild(admincss);
+                    var adminscript = document.createElement("script");
+                    adminscript.type = "module";
+                    adminscript.src = "/ATTS_Schedule_Website/src/admin.js";
+                    document.body.appendChild(adminscript);
+                    document.getElementById("toolbar-dev").style.background = "lightskyblue";
+                }
+                parsescript.src = "https://unpkg.com/tesseract.js@4.1.1/dist/tesseract.min.js";
+                document.body.appendChild(parsescript);
             }
             excelscript.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
             document.body.appendChild(excelscript);

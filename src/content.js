@@ -38,7 +38,11 @@ function saveCookie(){
     }
 }
 function loadCookie(){
-    if (document.cookie.length < 17) return;
+    if (document.cookie.length < 17) {
+        selectedRoleType = false;
+        selectedRole = 0;
+        return;
+    }
     selectedRoleType = getCookie("role-type") === "true";
     let role = getCookie("role")
     selectedRole = parseInt(role);

@@ -1,8 +1,6 @@
 function parseExcelFile(file, process) {
     var reader = new FileReader();
 
-
-
     reader.onload = function(e) {
         var data = e.target.result;
 

@@ -7,10 +7,10 @@ import {
     reload2With,
     getDays
 } from "/ATTS_Schedule_Website/src/main.js";
-
+import * as image_parser from "/ATTS_Schedule_Website/src/image_parser.js";
 import * as excel_parser from "/ATTS_Schedule_Website/src/excel_parser.js"
 
-const ListTools = ["Просмотр", "Редактор", "Управление Списками", "Парсер Excel"];
+const ListTools = ["Просмотр", "Редактор", "Списки", "Парсер Excel", "Парсер Картинки"];
 
 let selectedGroup = content.selectedRoleType ? 0 : content.selectedRole;
 let selectedTool = 0;
@@ -25,7 +25,7 @@ function selectGroup(_, id){
     Loading.style.opacity = "100%";
     selectTool(selectedTool);
 }
-setSelectRole(selectGroup)
+setSelectRole(selectGroup);
 function selectTool(id){
     let toRemove = document.getElementById("scroll-tools").getElementsByClassName("hs-selected");
     if (toRemove.length > 0) toRemove[0].classList.remove("hs-selected");
@@ -62,7 +62,6 @@ function selectTool(id){
         case 3:
             ScheduleContainer.innerHTML = `<button class='send-data' id="drop-field">Перетяните файл сюда</button>`
             document.getElementById("drop-field").ondrop = (event) => {
-                console.log("File(s) dropped");
                 event.preventDefault();
                 if (event.dataTransfer.items) {
                     // Use DataTransferItemList interface to access the file(s)
@@ -70,7 +69,6 @@ function selectTool(id){
                         // If dropped items aren't files, reject them
                         if (item.kind === "file") {
                             const file = item.getAsFile();
-                            console.log(`… file[${i}].name = ${file.name}`);
                             excel_parser.parse(file, content.ListTeachers, (parsed)=>{
                                 groupsDays = parsed;
                                 toolExcel();
@@ -80,7 +78,6 @@ function selectTool(id){
                 } else {
                     // Use DataTransfer interface to access the file(s)
                     [...event.dataTransfer.files].forEach((file, i) => {
-                        console.log(`… file[${i}].name = ${file.name}`);
                         excel_parser.parse(file, content.ListTeachers, (parsed)=>{
                             groupsDays = parsed;
                             toolExcel();
@@ -92,6 +89,32 @@ function selectTool(id){
                 event.preventDefault();
             };
             return;
+        case 4:
+            ScheduleContainer.innerHTML = `<button class='send-data' id="drop-field">Перетяните картинку сюда</button>`
+            document.getElementById("drop-field").ondrop = (event) => {
+                console.log("File(s) dropped");
+                event.preventDefault();
+                if (event.dataTransfer.items) {
+                    // Use DataTransferItemList interface to access the file(s)
+                    [...event.dataTransfer.items].forEach((item, i) => {
+                        // If dropped items aren't files, reject them
+                        if (item.kind === "file") {
+                            const file = item.getAsFile();
+                            console.log(`… file[${i}].name = ${file.name}`);
+                            image_parser.parse(file);
+                        }
+                    });
+                } else {
+                    // Use DataTransfer interface to access the file(s)
+                    [...event.dataTransfer.files].forEach((file, i) => {
+                        console.log(`… file[${i}].name = ${file.name}`);
+                        image_parser.parse(file);
+                    });
+                }
+            };
+            document.getElementById("drop-field").ondragover = (event) => {
+                event.preventDefault();
+            };
     }
 }
 let groupsDays = null;
